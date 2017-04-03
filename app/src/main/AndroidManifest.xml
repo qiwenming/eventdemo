@@ -15,7 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityDispatchActivity"></activity>
+        <activity
+            android:name=".activitydispatch.ActivityDispatchActivity"
+            android:theme="@style/AcTheme" />
+        <activity android:name=".activitydispatch.ADisMainActivity" />
+        <activity android:name=".activitydispatch.ADisDialogActivity"
+            android:theme="@style/Theme.AppCompat.Dialog"></activity>
     </application>
 
 </manifest>

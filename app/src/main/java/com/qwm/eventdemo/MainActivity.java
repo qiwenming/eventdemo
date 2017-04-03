@@ -1,22 +1,25 @@
 package com.qwm.eventdemo;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import com.qwm.eventdemo.activitydispatch.ADisMainActivity;
 
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
     private GridView contentGv;
     private ArrayList<String> itemList;
-
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initGridView();
+        Log.i(TAG, "onCreate: "+getWindowManager().getDefaultDisplay().getWidth());
     }
 
     public void initGridView() {
@@ -29,7 +32,7 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String itemStr = itemList.get(position);
                 if ("Activity的dispatchTouchEvent".equals(itemStr)) {
-                    startActivity(itemStr, ActivityDispatchActivity.class);
+                    startActivity(itemStr, ADisMainActivity.class);
                 }
             }
         });

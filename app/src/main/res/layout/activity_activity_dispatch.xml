@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.qwm.eventdemo.layout.BaseRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.qwm.eventdemo.activitydispatch.TestRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.qwm.eventdemo.ActivityDispatchActivity">
-
-    <com.qwm.eventdemo.layout.BaseRelativeLayout
-        android:layout_centerInParent="true"
-        android:layout_width="200dp"
-        android:layout_height="200dp">
-
-        <com.qwm.eventdemo.view.MyButton
-            android:layout_centerInParent="true"
-            android:layout_width="100dp"
-            android:layout_height="50dp" />
-
-    </com.qwm.eventdemo.layout.BaseRelativeLayout>
-
-</com.qwm.eventdemo.layout.BaseRelativeLayout>
+    android:background="@android:color/holo_orange_light"
+    tools:context=".activitydispatch.ActivityDispatchActivity">
+</com.qwm.eventdemo.activitydispatch.TestRelativeLayout>

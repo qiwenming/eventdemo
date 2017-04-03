@@ -3,6 +3,7 @@ package com.qwm.eventdemo.layout;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 /**
  * <b>Project:</b> AndroidReview01<br>
@@ -25,5 +26,10 @@ public class MyBlueRelativeLayout extends BaseRelativeLayout {
     public MyBlueRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setBackgroundColor(Color.BLUE);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
     }
 }

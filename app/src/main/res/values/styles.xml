@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AcTheme" parent="AppTheme">
+        <item name="android:navigationBarColor">@color/color_808855f0</item>
+    </style>
+
 </resources>
