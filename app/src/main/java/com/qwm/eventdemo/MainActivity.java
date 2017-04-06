@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.qwm.eventdemo.activitydispatch.ADisMainActivity;
+import com.qwm.eventdemo.viewgropdispatch.ViewGropDispatchActivity;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class MainActivity extends BaseActivity {
         contentGv = (GridView) findViewById(R.id.content_gv);
         itemList = new ArrayList<>();
         itemList.add("Activity的dispatchTouchEvent");
+        itemList.add("ViewGrop的dispatchTouchEvent");
         contentGv.setAdapter(new MyGridAdapter(this, itemList));
         contentGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -33,6 +35,8 @@ public class MainActivity extends BaseActivity {
                 String itemStr = itemList.get(position);
                 if ("Activity的dispatchTouchEvent".equals(itemStr)) {
                     startActivity(itemStr, ADisMainActivity.class);
+                }else if ("ViewGrop的dispatchTouchEvent".equals(itemStr)) {
+                    startActivity(itemStr, ViewGropDispatchActivity.class);
                 }
             }
         });
