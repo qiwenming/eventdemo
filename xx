@@ -1,0 +1,197 @@
+public boolean dispatchTouchEvent(MotionEvent ev) {、
+	//调试目的使用的，不用管它
+	if (mInputEventConsistencyVerifier != null) {
+		mInputEventConsistencyVerifier.onTouchEvent(ev, 1);
+	}
+
+	// If the event targets the accessibility focused view and this is it, start
+	// normal event dispatch. Maybe a descendant is what will handle the click.
+	if (ev.isTargetAccessibilityFocus() && isAccessibilityFocusedViewOrHost()) {
+		ev.setTargetAccessibilityFocus(false);
+	}
+
+	//这个值，用于作为返回，目的是为了标志我们的事件有没有消费
+	boolean handled = false;
+	//事件的安全检查,其实就是检查当前的窗口有没有被部分或者全部遮盖，如果遮盖了，那就不用处理了
+	if (onFilterTouchEventForSecurity(ev)) {
+		//下面这两句话，其实就是获取到当前的动作
+		final int action = ev.getAction();
+		final int actionMasked = action & MotionEvent.ACTION_MASK;
+
+		//初始化 down
+		if (actionMasked == MotionEvent.ACTION_DOWN) {
+			//动作为 down 说明开始了一个新的手势，那么将丢弃之前全部状态，
+			//重置之前的状态，里面具体怎么实现，后面一起探讨
+			cancelAndClearTouchTargets(ev);
+			resetTouchState();
+		}
+
+		//下面开始检查是否需要 拦截
+		final boolean intercepted;
+		if (actionMasked == MotionEvent.ACTION_DOWN
+				|| mFirstTouchTarget != null) {
+			//获取当前的事件是否 不允许拦截 （true不允许）
+			final boolean disallowIntercept = (mGroupFlags & FLAG_DISALLOW_INTERCEPT) != 0;
+			if (!disallowIntercept) {
+				//事件被拦截了，那么把事件分发到拦截的方法中去
+				intercepted = onInterceptTouchEvent(ev);
+				ev.setAction(action);
+			} else {
+				intercepted = false;
+			}
+		} else {
+			intercepted = true;
+		}
+
+		if (intercepted || mFirstTouchTarget != null) {
+			ev.setTargetAccessibilityFocus(false);
+		}
+
+		//取消检测 （之前设置了取消或者现在的动作就是取消）
+		final boolean canceled = resetCancelNextUpFlag(this)
+				|| actionMasked == MotionEvent.ACTION_CANCEL;
+
+		final boolean split = (mGroupFlags & FLAG_SPLIT_MOTION_EVENTS) != 0;
+		TouchTarget newTouchTarget = null;
+		boolean alreadyDispatchedToNewTouchTarget = false;
+		//如果没有取消和没有拦截
+		if (!canceled && !intercepted) {
+			View childWithAccessibilityFocus = ev.isTargetAccessibilityFocus()
+					? findChildWithAccessibilityFocus() : null;
+
+			if (actionMasked == MotionEvent.ACTION_DOWN
+					|| (split && actionMasked == MotionEvent.ACTION_POINTER_DOWN)
+					|| actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
+				final int actionIndex = ev.getActionIndex(); // always 0 for down
+				final int idBitsToAssign = split ? 1 << ev.getPointerId(actionIndex)
+						: TouchTarget.ALL_POINTER_IDS;
+
+				//清除Targets中相应的pointer ids
+				removePointersFromTouchTargets(idBitsToAssign);
+
+				final int childrenCount = mChildrenCount;
+				if (newTouchTarget == null && childrenCount != 0) {
+					final float x = ev.getX(actionIndex);//相对与父控件的x值
+					final float y = ev.getY(actionIndex);//相对于父控件的y值
+					//
+					final ArrayList<View> preorderedList = buildOrderedChildList();
+					final boolean customOrder = preorderedList == null
+							&& isChildrenDrawingOrderEnabled();
+					final View[] children = mChildren;
+					//遍历所有的子view,寻找到最合适的view,把时间分发下去
+					for (int i = childrenCount - 1; i >= 0; i--) {
+						final int childIndex = customOrder
+								? getChildDrawingOrder(childrenCount, i) : i;
+						//拿到我们的子view
+						final View child = (preorderedList == null)
+								? children[childIndex] : preorderedList.get(childIndex);
+
+						//判断是否存在开启了AccessibilityFocus 的view，存在判断当前的子view是不是开启的view
+						//如果不是查找下一个
+						if (childWithAccessibilityFocus != null) {
+							if (childWithAccessibilityFocus != child) {
+								continue;
+							}
+							childWithAccessibilityFocus = null;
+							i = childrenCount - 1;//更改循环的条件值
+						}
+
+						//判断当前的循环到的子view是否能够接受事件，和当前的点是否所在此子view上
+						//只要此子view不能接受事件或者点没有落在它身上，查找下一个
+						if (!canViewReceivePointerEvents(child)
+								|| !isTransformedTouchPointInView(x, y, child, null)) {
+							ev.setTargetAccessibilityFocus(false);
+							continue;
+						}
+
+						//来到这里，说明我们能找到合适的view了，
+						//获取它的事件链（链表），存在事件链了，退出循环
+						newTouchTarget = getTouchTarget(child);
+						if (newTouchTarget != null) {
+							newTouchTarget.pointerIdBits |= idBitsToAssign;
+							break;
+						}
+
+						resetCancelNextUpFlag(child);
+						if (dispatchTransformedTouchEvent(ev, false, child, idBitsToAssign)) {
+							mLastTouchDownTime = ev.getDownTime();
+							if (preorderedList != null) {
+								for (int j = 0; j < childrenCount; j++) {
+									if (children[childIndex] == mChildren[j]) {
+										mLastTouchDownIndex = j;
+										break;
+									}
+								}
+							} else {
+								mLastTouchDownIndex = childIndex;
+							}
+							mLastTouchDownX = ev.getX();
+							mLastTouchDownY = ev.getY();
+							newTouchTarget = addTouchTarget(child, idBitsToAssign);
+							alreadyDispatchedToNewTouchTarget = true;
+							break;
+						}
+						ev.setTargetAccessibilityFocus(false);
+					}
+					if (preorderedList != null) preorderedList.clear();
+				}
+
+				if (newTouchTarget == null && mFirstTouchTarget != null) {
+					newTouchTarget = mFirstTouchTarget;
+					while (newTouchTarget.next != null) {
+						newTouchTarget = newTouchTarget.next;
+					}
+					newTouchTarget.pointerIdBits |= idBitsToAssign;
+				}
+			}
+		}
+
+		if (mFirstTouchTarget == null) {
+			handled = dispatchTransformedTouchEvent(ev, canceled, null,
+					TouchTarget.ALL_POINTER_IDS);
+		} else {
+			TouchTarget predecessor = null;
+			TouchTarget target = mFirstTouchTarget;
+			while (target != null) {
+				final TouchTarget next = target.next;
+				if (alreadyDispatchedToNewTouchTarget && target == newTouchTarget) {
+					handled = true;
+				} else {
+					final boolean cancelChild = resetCancelNextUpFlag(target.child)
+							|| intercepted;
+					if (dispatchTransformedTouchEvent(ev, cancelChild,
+							target.child, target.pointerIdBits)) {
+						handled = true;
+					}
+					if (cancelChild) {
+						if (predecessor == null) {
+							mFirstTouchTarget = next;
+						} else {
+							predecessor.next = next;
+						}
+						target.recycle();
+						target = next;
+						continue;
+					}
+				}
+				predecessor = target;
+				target = next;
+			}
+		}
+
+		if (canceled
+				|| actionMasked == MotionEvent.ACTION_UP
+				|| actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
+			resetTouchState();
+		} else if (split && actionMasked == MotionEvent.ACTION_POINTER_UP) {
+			final int actionIndex = ev.getActionIndex();
+			final int idBitsToRemove = 1 << ev.getPointerId(actionIndex);
+			removePointersFromTouchTargets(idBitsToRemove);
+		}
+	}
+
+	if (!handled && mInputEventConsistencyVerifier != null) {
+		mInputEventConsistencyVerifier.onUnhandledEvent(ev, 1);
+	}
+	return handled;
+}
