@@ -30,6 +30,7 @@ public class MyButton extends Button{
                 Log.i(TAG, "---up: "+xy);
                 break;
         }
+        Log.i(TAG, "onTouchEvent: "+ event.getPointerCount());
         return false;
     }
 }
