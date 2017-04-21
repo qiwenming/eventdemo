@@ -4,8 +4,10 @@ import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.TouchDelegate;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.Toast;
 
 import com.qwm.eventdemo.BaseActivity;
@@ -20,6 +22,7 @@ import com.qwm.eventdemo.R;
  */
 public class TouchDelegateDemoActivity extends BaseActivity {
     private AppCompatButton testBtn;
+    private static final String TAG = "TouchDeleg";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,7 @@ public class TouchDelegateDemoActivity extends BaseActivity {
                 rect.set(rect.left-offset, rect.top-offset, rect.right+offset, rect.bottom+offset);
                 TouchDelegate delegate = new TouchDelegate(rect,testBtn);
                 ((View)testBtn.getParent()).setTouchDelegate(delegate);
+                Log.i(TAG, "run: "+ ViewConfiguration.get(testBtn.getContext()).getScaledTouchSlop());
             }
         });
     }
