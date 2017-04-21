@@ -74,7 +74,7 @@ public class rrr {
          */
         public TouchDelegate(Rect bounds, View delegateView) {
             mBounds = bounds;
-
+            //获取相对的触摸区域的误差值（就是在这个超过原来的触摸区域，只要超出值小于等于这个值，都算在触摸区域内）
             mSlop = ViewConfiguration.get(delegateView.getContext()).getScaledTouchSlop();
             mSlopBounds = new Rect(bounds);
             mSlopBounds.inset(-mSlop, -mSlop);
@@ -98,7 +98,7 @@ public class rrr {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     Rect bounds = mBounds;
-
+                    //判断这个区域包含不包含这个点
                     if (bounds.contains(x, y)) {
                         mDelegateTargeted = true;
                         sendToDelegate = true;
@@ -109,6 +109,7 @@ public class rrr {
                     sendToDelegate = mDelegateTargeted;
                     if (sendToDelegate) {
                         Rect slopBounds = mSlopBounds;
+                        //判断移动的点是否超出了范围
                         if (!slopBounds.contains(x, y)) {
                             hit = false;
                         }
@@ -121,14 +122,16 @@ public class rrr {
             }
             if (sendToDelegate) {
                 final View delegateView = mDelegateView;
-
+                //判断移动的点是否没有超出了我们的范围
                 if (hit) {
                     // Offset event coordinates to be inside the target view
+                    //没有超出，重新设置触摸的点，以确保我们下面调用代理的view的分发方法时，控件能够判断点是落在它上面的
                     event.setLocation(delegateView.getWidth() / 2, delegateView.getHeight() / 2);
                 } else {
                     // Offset event coordinates to be outside the target view (in case it does
                     // something like tracking pressed state)
                     int slop = mSlop;
+                    //超出了，重新设置触摸的点，保证控件能判断点不是落在它上面
                     event.setLocation(-(slop * 2), -(slop * 2));
                 }
                 handled = delegateView.dispatchTouchEvent(event);
