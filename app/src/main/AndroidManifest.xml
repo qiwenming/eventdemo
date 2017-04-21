@@ -22,7 +22,9 @@
         <activity
             android:name=".activitydispatch.ADisDialogActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".viewgropdispatch.ViewGropDispatchActivity"></activity>
+        <activity android:name=".viewgropdispatch.ViewGropDispatchActivity" />
+        <activity android:name=".viewdispatch.ViewDispatchActivity" />
+        <activity android:name=".touchdelegatedemo.TouchDelegateDemoActivity"></activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.qwm.eventdemo.activitydispatch.ADisMainActivity;
+import com.qwm.eventdemo.touchdelegatedemo.TouchDelegateDemoActivity;
 import com.qwm.eventdemo.viewgropdispatch.ViewGropDispatchActivity;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MainActivity extends BaseActivity {
         itemList = new ArrayList<>();
         itemList.add("Activity的dispatchTouchEvent");
         itemList.add("ViewGrop的dispatchTouchEvent");
+        itemList.add("TouchDelegate测试");
         contentGv.setAdapter(new MyGridAdapter(this, itemList));
         contentGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -37,6 +39,8 @@ public class MainActivity extends BaseActivity {
                     startActivity(itemStr, ADisMainActivity.class);
                 }else if ("ViewGrop的dispatchTouchEvent".equals(itemStr)) {
                     startActivity(itemStr, ViewGropDispatchActivity.class);
+                }else if ("TouchDelegate测试".equals(itemStr)) {
+                    startActivity(itemStr, TouchDelegateDemoActivity.class);
                 }
             }
         });
