@@ -60,18 +60,25 @@ public class TouchDelegateButtonActivity extends BaseActivity {
             @Override
             public void run() {
                 Rect rect = getIntersectDotRect();
-//                mForginView.setTouchDelegate(new TouchDelegate(rect,mBackView));
-                mForginView.setTouchDelegate(new ButtonTouchDelegate(rect,mBackView));
+                mForginView.setTouchDelegate(new TouchDelegate(rect,mBackView));
+//                mForginView.setTouchDelegate(new ButtonTouchDelegate(rect,mBackView));
             }
         });
     }
 
+    /**
+     * 获取相交的部分，相对于前面控件的坐标
+     * @return
+     */
     public Rect getIntersectDotRect(){
         Rect rect = new Rect();
         //这里面最主要的一步就是计算相交部分的局域，并且转换为mForginView中的点。
+
+        //距离左边 哪个大要哪个
         int left = mBackView.getLeft()-mForginView.getLeft();
         left = left < 0 ? 0 : left;
 
+        //两个控件相对于 显示在前面控件（mForginView）右边到左边的距离， 哪个小用哪个
         int r1 = mForginView.getRight()-mForginView.getLeft();//就是宽度
         int r2 = mBackView.getRight()-mForginView.getLeft();
         int right = r1 - r2 > 0 ?r2:r1;

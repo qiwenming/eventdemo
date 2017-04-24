@@ -3,20 +3,16 @@
     android:layout_width="match_parent"
     android:background="#ffffff"
     android:layout_height="match_parent">
-
-
     <View
         android:id="@+id/back_tv"
         android:layout_centerInParent="true"
         android:background="@drawable/btn_touchdelegate_orange_selector"
         android:layout_width="match_parent"
         android:layout_height="60dp" />
-
     <View
         android:id="@+id/forgin_tv"
         android:background="@drawable/btn_touchdelegate_green_selector"
         android:layout_centerInParent="true"
         android:layout_width="300dp"
         android:layout_height="500dp" />
-
 </RelativeLayout>
