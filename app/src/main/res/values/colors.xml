@@ -5,5 +5,12 @@
     <color name="colorAccent">#FF4081</color>
     <color name="color_808855f0">#808855f0</color>
     <color name="color_90b3b3b3">#90b3b3b3</color>
-    <color name="white">#ffffff</color>
+    <color name="white">#6600ff00</color>
+
+
+    <color name="green_6600ff00">#6600ff00</color>
+    <color name="green_2000ff00">#2000ff00</color>
+    <color name="orange_ff7f00">#ff7f00</color>
+    <color name="orange_80ff7f00">#80ff7f00</color>
+
 </resources>

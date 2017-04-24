@@ -24,7 +24,10 @@
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".viewgropdispatch.ViewGropDispatchActivity" />
         <activity android:name=".viewdispatch.ViewDispatchActivity" />
-        <activity android:name=".touchdelegatedemo.TouchDelegateDemoActivity"></activity>
+        <activity android:name=".touchdelegatedemo.TouchDelegateDemoActivity" />
+        <activity android:name=".touchdelegatedemo.TouchDelegateMainActivity" />
+        <activity android:name=".touchdelegatedemo.TouchDelegateButtonActivity" />
+        <activity android:name=".viewgropdispatch.BackForginButtonActivity"></activity>
     </application>
 
 </manifest>

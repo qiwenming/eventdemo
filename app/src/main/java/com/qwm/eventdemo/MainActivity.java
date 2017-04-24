@@ -8,6 +8,7 @@ import android.widget.GridView;
 
 import com.qwm.eventdemo.activitydispatch.ADisMainActivity;
 import com.qwm.eventdemo.touchdelegatedemo.TouchDelegateDemoActivity;
+import com.qwm.eventdemo.touchdelegatedemo.TouchDelegateMainActivity;
 import com.qwm.eventdemo.viewgropdispatch.ViewGropDispatchActivity;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class MainActivity extends BaseActivity {
                 }else if ("ViewGrop的dispatchTouchEvent".equals(itemStr)) {
                     startActivity(itemStr, ViewGropDispatchActivity.class);
                 }else if ("TouchDelegate测试".equals(itemStr)) {
-                    startActivity(itemStr, TouchDelegateDemoActivity.class);
+                    startActivity(itemStr, TouchDelegateMainActivity.class);
                 }
             }
         });
